@@ -1,0 +1,86 @@
+package final_exam;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import java.awt.event.*;
+
+public class Game extends JFrame {
+	private JPanel background;
+	private Map map;
+	private Human h;
+	private List<JPanel> panelList;
+	private JPanel police;
+	private Room[][] map1;
+
+	private int policeX, policeY;
+
+	public Game() {
+		setTitle("8*8 Color Frame");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		Container c = getContentPane();
+//		background = new JPanel();
+////		background.setLayout(null);
+//		background.setBounds(0, 0, 700, 700);
+//		background.setBackground(Color.YELLOW);
+
+		map = new Map();
+		h = new Human();
+		panelList = map.getPanelList();
+		policeX = 1;
+		policeY = 2;
+
+		police = (JPanel) panelList.get(policeX * 9 + policeY).add(h);
+		// policeLocation = 9; // ·»´ý °ªÀ¸·Î ÇÒ²¨ÀÓ
+
+		map1 = map.getLevel1();
+
+		map.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int x;
+				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+					if (map1[policeX][policeY].getLeft() == 0) {
+						System.out.println("¿ÞÂÊ");
+						System.out.println(police.getLocation());
+						panelList.get(policeX * 9 + policeY).remove(h);
+
+						panelList.get(policeX * 9 + policeY).repaint();
+
+						policeY -= 1;
+						panelList.get(policeX * 9 + policeY).add(h);
+					}
+				} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					if (map1[policeX][policeY].getRight() == 0) {
+						System.out.println("¿À¸¥ÂÊ");
+						panelList.get(policeX * 9 + policeY).remove(h);
+
+						panelList.get(policeX * 9 + policeY).repaint();
+
+						policeY += 1;
+						panelList.get(policeX * 9 + policeY).add(h);
+					}
+				}
+			}
+		});
+
+//		background.add(map);
+//		this.add(background);
+		c.add(map, BorderLayout.CENTER);
+		setSize(700, 700);
+		setResizable(false); // Ã¢ Å©±â º¯È¯X
+		setVisible(true);
+		map.setFocusable(true);
+	}
+
+	public static void main(String[] args) {
+		new Game();
+	}
+}

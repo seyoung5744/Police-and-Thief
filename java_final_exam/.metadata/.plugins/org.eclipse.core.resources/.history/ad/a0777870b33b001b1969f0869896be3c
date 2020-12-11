@@ -1,0 +1,33 @@
+package final_exam;
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+
+public class Human extends JPanel {
+
+	public Human() {
+		// TODO Auto-generated constructor stub
+		this.setBackground(Color.red);
+		this.setSize(100, 100);
+		this.setBorder(new LineBorder(Color.green));
+	}
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintComponent(g);
+		int xArea = 400, yArea = 400;// 아래의 상수와 같은 수로 해야함 (클래스 하나 지정하고 상수를 두면 될듯한데 넘어감)
+
+		int xLine = xArea / 2, yLine = yArea / 2;
+
+		int xPoint = (xArea - xLine) / 2, yPoint = (yArea - yLine) / 2;
+
+		g.drawLine(xPoint + xLine, yPoint, xPoint, yPoint + yLine);
+		g.setColor(Color.red);
+		g.fillOval(20, 30, 200, 200);
+
+	}
+}

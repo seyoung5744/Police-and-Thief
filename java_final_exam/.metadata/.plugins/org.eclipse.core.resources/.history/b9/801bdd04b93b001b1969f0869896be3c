@@ -1,0 +1,41 @@
+package final_exam;
+
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import java.awt.event.*;
+
+public class Game extends JFrame{
+	private Map map;
+	private Human h;
+	private List<JPanel> panelList;
+	
+	public Game(){
+		setTitle("8*8 Color Frame");
+		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Container c = getContentPane();
+		
+		map = new Map();	
+		h = new Human();
+		panelList = map.getPanelList();
+
+		panelList.get(9).add(h);
+		
+		this.addKeyListener(new KeyAdpter() {
+			
+		});
+		c.add(map, BorderLayout.CENTER);
+		setSize(700, 700);
+		setResizable(false);
+	}
+	
+	public static void main(String[] args) {
+		new Game();
+	}
+}

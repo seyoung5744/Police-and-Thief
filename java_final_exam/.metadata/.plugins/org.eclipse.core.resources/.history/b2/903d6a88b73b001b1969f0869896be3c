@@ -1,0 +1,21 @@
+package final_exam;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+
+public class Human extends JPanel {
+	@Override
+	protected void paintComponent(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintComponent(g);
+		this.setSize(100, 100);
+		this.setLocation(0, 0);
+		g.setColor(Color.red);
+		g.fillOval(0, 0, 50, 50);
+
+	}
+}

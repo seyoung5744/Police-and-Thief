@@ -1,0 +1,19 @@
+package final_exam;
+
+public class Room {
+	boolean left, right, up, down;
+	public Room(boolean left,boolean right,boolean up,boolean down) {
+		this.left = left;
+		this.right = right;
+		this.up = up;
+		this.down = down;
+	}
+	public setRoom(boolean left,boolean right,boolean up,boolean down) {
+		this.left = left;
+		this.right = right;
+		this.up = up;
+		this.down = down;
+	}
+	
+	
+}

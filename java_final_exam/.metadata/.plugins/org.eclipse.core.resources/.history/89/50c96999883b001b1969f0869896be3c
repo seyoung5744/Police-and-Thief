@@ -1,0 +1,138 @@
+package 실습문제05;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.io.IOException;
+
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+public class GameImage extends JPanel {
+	GameImage() {
+		this.setBounds(600, 600, 50, 60);
+		this.setBackground(Color.YELLOW);
+	}
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 10, 50, 50);
+		g.setColor(Color.RED);
+		g.fillRect(20, 0, 10, 10);
+	}
+
+}
+
+class Bullet extends JPanel implements Runnable {
+	//Thread th;
+	Target target;
+	
+	Bullet(GameImage attack, Target target) {
+		this.setBounds(attack.getX() + 20, 590, 10, 10);
+		this.target = target;
+		
+		//th = new Thread(this);
+		//th.start();
+	}
+
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.setColor(Color.BLUE);
+		g.fillRect(0, 0, 10, 10);
+	}
+	@Override
+	public int getX() {
+		// TODO Auto-generated method stub
+		return super.getX();
+	}
+	@Override
+	public int getY() {
+		// TODO Auto-generated method stub
+		return super.getY();
+	}
+	@Override
+	synchronized public void run() {
+		int y = this.getY();
+		while (y > -10) {
+			y--;
+			try {
+				Thread.sleep(5);
+				this.setLocation(this.getX(), y);
+				this.repaint();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(this.getX() >= target.getX() && this.getX() <= target.getX()+60
+					&& this.getY() == target.getY() + 60) {
+				Target.flag = true;
+				JOptionPane.showMessageDialog(null,"명중");
+			}
+		}
+		ShootingImage.flag = false;
+	} // run()
+}
+
+class Target extends JPanel implements Runnable {
+	Thread th;
+	ShootingImage image;
+	static boolean flag = false;
+	
+	
+	Target(ShootingImage image) {
+		this.image = image;
+		this.setBounds(0, 0, 60, 60);
+		this.setBackground(Color.MAGENTA);
+		
+		th = new Thread(this);
+		th.start();
+	}
+
+	
+	public void targetMove() {
+		int x = image.getWidth() - 70;	// 움직이는 범위
+		System.out.println("target: " + x);
+		while (x != 0 && !flag) {
+			x--;
+			try {
+				Thread.sleep(10);
+				this.setLocation(x, this.getY());
+				this.repaint();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		while (x != image.getWidth() - 70 && !flag) {
+			x++;
+			try {
+				Thread.sleep(10);
+				this.setLocation(x, this.getY());
+				this.repaint();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}  //targetMove()
+	
+	@Override
+	public int getX() {
+		
+		return super.getX();
+	}
+	@Override
+	public int getY() {
+		
+		return super.getY();
+	}
+	
+	@Override
+	public void run() {
+		while(!flag) {
+			targetMove();
+		}
+	}
+}

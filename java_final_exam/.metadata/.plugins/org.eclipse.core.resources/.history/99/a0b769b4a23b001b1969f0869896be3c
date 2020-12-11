@@ -1,0 +1,43 @@
+package test;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class WalkingLabel extends JFrame implements Runnable{
+	JLabel label;
+	String string = "나는 당신을 사랑합니다.";
+	Thread th;
+	
+	WalkingLabel(){
+		this.setTitle("걸어서 나타나는 문자열");
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(300,250);
+	
+		this.setLayout(new FlowLayout());
+		
+		label = new JLabel();
+		th = new Thread(this);
+		th.start();
+		
+		this.add(label);
+		setVisible(true);		
+	}
+
+	@Override
+	public void run() {
+		try {
+			String m = "";
+			for(int i = 0; i < string.length()/*13*/ ; i++) {
+				Thread.sleep(500);
+				
+				label.setText(string.substring(0, i + 1));
+				
+				if(i == string.length() - 1)
+					i = -1;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+	}
+}

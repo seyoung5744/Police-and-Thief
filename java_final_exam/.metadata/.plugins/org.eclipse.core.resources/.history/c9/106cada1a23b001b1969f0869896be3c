@@ -1,0 +1,7 @@
+package final_exam;
+
+import javax.swing.JPanel;
+
+public class Human extends JPanel{
+	
+}

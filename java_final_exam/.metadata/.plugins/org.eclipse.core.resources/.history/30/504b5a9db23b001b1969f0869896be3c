@@ -1,0 +1,19 @@
+package final_exam;
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+import javax.swing.JPanel;
+
+public class Human extends JPanel{
+	@Override
+	protected void paintComponent(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintComponent(g);
+		g.setColor(Color.red);
+//		g.drawOval(10, 10, g.getClipBounds().width, g.getClipBounds().height);
+//		g.fillOval(0, 0, 20, 20);
+		g.drawArc(20, 100, 80, 80, 90, 270);
+//		g.drawOval(0, 0, 10,10);
+	}
+}

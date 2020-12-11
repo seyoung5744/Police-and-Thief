@@ -1,0 +1,13 @@
+package final_exam;
+
+import javax.swing.JFrame;
+
+public class Game  extends JFrame {
+	Map map;
+	Human h;
+	
+	public Game(){
+		this.setTitle("∞‘¿”");
+		
+	}
+}

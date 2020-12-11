@@ -1,0 +1,39 @@
+package final_exam;
+
+import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+
+public class MyPanel extends JFrame {
+	JPanel lab;
+	JPanel lab1;
+	MyPanel() {
+		setTitle("8*8 Color Frame");
+		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		Container c = getContentPane();
+		lab1 = new JPanel();
+		
+		lab1.setLayout(new GridLayout(8, 8));
+		for (int i = 0; i < 64; i++) {
+			lab = new JPanel();
+			lab.setBackground(Color.gray);
+			lab.setBorder(new LineBorder(Color.black));
+
+			lab.setOpaque(true);
+			lab1.add(lab);
+		}
+		lab1.setBorder(BorderFactory.createEmptyBorder(10 , 10 , 10 , 10));
+		c.add(lab1,BorderLayout.CENTER);
+		
+		setSize(700, 700);
+	}
+
+	public static void main(String[] args) {
+		new MyPanel();
+		System.out.println("test");
+	}
+
+}

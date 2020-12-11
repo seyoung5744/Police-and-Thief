@@ -1,0 +1,45 @@
+package final_exam;
+
+
+import java.awt.*;
+import javax.swing.*;
+
+public class CirclePanel extends JFrame implements Runnable {
+	JPanel panel;
+	Thread th;
+	
+	CirclePanel() {
+		setTitle("원을 0.5초 간격으로 이동");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(500, 500);
+
+		panel = new JPanel() {
+			@Override
+			protected void paintComponent(G	raphics g) {
+				super.paintComponent(g);
+				g.setColor(Color.RED);
+				int x = (int) (Math.random() * 450); // 0 ~ 459
+				int y = (int) (Math.random() * 450);
+				System.out.println(x +", " + y + "/ " + getWidth() + ", " + getHeight());
+				g.drawOval(x, y, 40, 40);
+			}
+		};
+		this.add(panel);
+		th = new Thread(this);
+		setVisible(true);
+		th.start();
+	}
+
+	@Override
+	public void run() {
+		try {
+			while (true) {
+				Thread.sleep(500);
+				this.repaint();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+	}
+}
