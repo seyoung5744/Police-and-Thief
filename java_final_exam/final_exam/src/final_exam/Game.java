@@ -7,18 +7,20 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.event.*;
 
-interface GameLogic{
-	int distance();
+interface Calculate {
+	int setXY(int X, int Y);
 }
-public class Game extends JFrame {
+
+public class Game extends JFrame implements GameComponent {
 	private Map map; // 맵
 	private Human thief; // 도둑
 	private Human police; // 경찰
-	
+
 	private List<JPanel> panelList; // 칸 리스트
 	private Room[][] map1; // 도둑, 경찰 동작 유무
 
@@ -26,34 +28,14 @@ public class Game extends JFrame {
 	private int policeX, policeY;
 
 	public Game() {
-		setTitle("8*8 Color Frame");
+		setTitle("경찰과 도둑");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		Container c = getContentPane();
-
-		map = new Map();
-		thief = new Human();
-		police = new Human();
-		thief.setColor(new Color(255,0,0));
-		police.setColor(new Color(0,0,255));
-		
-		panelList = map.getPanelList();
-		thiefX = 1;
-		thiefY = 2;
-		
-		policeX = 0;
-		policeY = 1;
-		
-		panelList.get(thiefX * 9 + thiefY).add(thief);
-		panelList.get(policeX * 9 + policeY).add(police);
-		
-		
-		map1 = map.getLevel1();
+		init();
 
 		map.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				int x;
 				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 					if (map1[thiefX][thiefY].getLeft() == 0) {
 						System.out.println("왼쪽");
@@ -74,7 +56,7 @@ public class Game extends JFrame {
 						thiefY += 1;
 						panelList.get(thiefX * 9 + thiefY).add(thief);
 					}
-				} else if(e.getKeyCode() == KeyEvent.VK_UP) {
+				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
 					if (map1[thiefX][thiefY].getUp() == 0) {
 						System.out.println("위");
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
@@ -84,7 +66,7 @@ public class Game extends JFrame {
 						thiefX -= 1;
 						panelList.get(thiefX * 9 + thiefY).add(thief);
 					}
-				} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 					if (map1[thiefX][thiefY].getDown() == 0) {
 						System.out.println("아래");
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
@@ -94,85 +76,158 @@ public class Game extends JFrame {
 						thiefX += 1;
 						panelList.get(thiefX * 9 + thiefY).add(thief);
 					}
-				} else if(e.getKeyCode() == KeyEvent.VK_S) {
-					
 				}
-				panelList.get(policeX * 9 + policeY).remove(police);
-				panelList.get(policeX * 9 + policeY).repaint();
-				movePolice();
-				movePolice();
-				panelList.get(policeX * 9 + policeY).add(police);
+				movePoliceUI();
+				getThief();
+				arriveDetination();
 			}
 		});
 
-		c.add(map, BorderLayout.CENTER);
-		setSize(700, 700);
+		this.add(map, BorderLayout.CENTER);
+
+		setBounds(600, 150, 700, 700); // 프레임 위치, 크기 조절
 		setResizable(false); // 창 크기 변환X
 		setVisible(true);
-		map.setFocusable(true);
+		map.setFocusable(true); // map Panel에 키보드 이벤트 활성화
 	}
-	
+
+	public void init() {
+		// 객체 초기화
+		map = new Map();
+		thief = new Human();
+		police = new Human();
+
+		panelList = map.getPanelList(); // 맵 칸 객체 리스트 얻기
+		// 못가는 벽을 얻기 위한 객체 리스트
+		map1 = map.getLevel1();
+
+		thief.setColor(new Color(255, 0, 0));
+		police.setColor(new Color(0, 0, 255));
+
+		// 도둑 초기 위치
+		thiefX = 1;
+		thiefY = 2;
+
+		// 경찰 초기 위치
+		policeX = 0;
+		policeY = 1;
+
+//		// 도둑 초기 위치
+//		thiefX = 0;
+//		thiefY = 1;
+//
+//		// 경찰 초기 위치
+//		policeX = 4;
+//		policeY = 3;
+
+		// 도둑, 경찰 UI 추가
+		System.out.println(panelList.get(thiefX * 9 + thiefY).getClass());
+		panelList.get(thiefX * 9 + thiefY).add(thief);
+		panelList.get(policeX * 9 + policeY).add(police);
+
+	}
+
+	@Override
+	public void arriveDetination() {
+		if (thiefX == 0 && thiefY == 0) {
+			JOptionPane.showMessageDialog(null, "탈출~");
+			initPosition();
+		}
+	}
+
+	// 경찰이 도둑 잡을 때.
+	@Override
+	public void getThief() {
+		if ((thiefX == policeX) && (thiefY == policeY)) {
+			JOptionPane.showMessageDialog(null, "잡았다!!도둑!!");
+			initPosition();
+		}
+	}
+
+	// 경찰, 도둑 위치 초기화
+	@Override
+	public void initPosition() {
+		// 도둑, 경찰 UI 추가
+		panelList.get(thiefX * 9 + thiefY).remove(thief);
+		panelList.get(thiefX * 9 + thiefY).repaint();
+		panelList.get(policeX * 9 + policeY).remove(police);
+		panelList.get(policeX * 9 + policeY).repaint();
+
+		// 도둑 초기 위치
+		thiefX = 1;
+		thiefY = 2;
+
+		// 경찰 초기 위치
+		policeX = 0;
+		policeY = 1;
+
+		panelList.get(thiefX * 9 + thiefY).add(thief);
+		panelList.get(policeX * 9 + policeY).add(police);
+
+	}
+
+	// 경찰 UI 위치 조정
+	public void movePoliceUI() {
+		panelList.get(policeX * 9 + policeY).remove(police);
+		panelList.get(policeX * 9 + policeY).repaint();
+		movePolice();
+		movePolice();
+		panelList.get(policeX * 9 + policeY).add(police);
+	}
+
+	// 경찰 X,Y값 조정.
+	@Override
 	public void movePolice() {
-		System.out.println("와라 오냐?");
-		int dis = this.distance();
+		int dis = distance();
 		int dis2;
 		int temp;
-		System.out.println(this.distance());
-		
-		if(map1[policeX][policeY].getLeft() == 0) {
+
+		if (map1[policeX][policeY].getLeft() == 0) {
 			temp = policeY;
 			policeY -= 1;
-			dis2 = this.distance();
-			if(dis2 > dis) { // 안움직일 때
+			dis2 = distance();
+			if (dis2 > dis) // 안움직일 때
 				policeY = temp;
-				System.out.println("?");
-			}
 			else // 움직일 때
 				return;
 		}
-		if(map1[policeX][policeY].getRight() == 0) {
+		if (map1[policeX][policeY].getRight() == 0) {
 			temp = policeY;
 			policeY += 1;
-			dis2 = this.distance();
-			if(dis2 > dis)
+			dis2 = distance();
+			if (dis2 > dis)
 				policeY = temp;
 			else
 				return;
 		}
-		if(map1[policeX][policeY].getUp() == 0) {
+		if (map1[policeX][policeY].getUp() == 0) {
 			temp = policeX;
 			policeX -= 1;
-			dis2 = this.distance();
-			if(dis2 > dis)
+			dis2 = distance();
+			if (dis2 > dis)
 				policeX = temp;
 			else
 				return;
 		}
-		if(map1[policeX][policeY].getDown() == 0) {
+		if (map1[policeX][policeY].getDown() == 0) {
 			temp = policeX;
 			policeX += 1;
-			GameLogic g = () -> {
-				return Math.abs(thiefX - policeX) + Math.abs(thiefY - policeY);
-			};
-			dis2 = g.distance();
-			
-			System.out.println(dis + " " + dis2);
-			if(dis2 > dis)
-			{
+
+			dis2 = distance();
+			if (dis2 > dis)
 				policeX = temp;
-				System.out.println("???");
-			}
 			else
 				return;
 		}
-		
+
 	}
-	
-	public int distance()
-	{
+
+	@Override
+	public int distance() {
+		// TODO Auto-generated method stub
 		return Math.abs(thiefX - policeX) + Math.abs(thiefY - policeY);
 	}
-	
+
 	public static void main(String[] args) {
 		new Game();
 	}

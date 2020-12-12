@@ -1,0 +1,5 @@
+package final_exam;
+
+public interface GameLogic{
+	public int distance(); // 도둑과 경찰의 거리 계산
+}

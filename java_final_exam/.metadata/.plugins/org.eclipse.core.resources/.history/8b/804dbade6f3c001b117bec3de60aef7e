@@ -1,0 +1,5 @@
+package final_exam;
+
+public interface GameLogin {
+	public void move();
+}

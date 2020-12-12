@@ -1,0 +1,9 @@
+package final_exam;
+
+// 게임에 필요한 규칙들 method로 모아서 정의
+public interface GameLogic{
+	public void movePolice();
+	public void getThief();
+//	public int setXY(int X, int Y);
+//	public int calc(int a, int b);
+}

@@ -1,0 +1,7 @@
+package 실습문제05;
+
+public class ShootingGameMain {
+	public static void main(String[] args) {
+		new ShootingImage();
+	}
+}
