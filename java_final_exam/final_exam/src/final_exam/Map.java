@@ -18,7 +18,7 @@ public class Map extends JPanel {
 		
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 9; j++) {
-				lab = new JPanel();
+				lab = new JPanel(); // ¸Ê Panel Á¤ÀÇ
 				lab.setLayout( new GridLayout(1, 1));
 				lab.setBackground(Color.white);
 				lab.setBorder(new CompoundBorder(
@@ -119,6 +119,7 @@ public class Map extends JPanel {
 
 
 	}
+	
 	public Room[][] getLevel1() {
 		return map1;
 	}

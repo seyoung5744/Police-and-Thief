@@ -3,6 +3,9 @@ package final_exam;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -26,58 +29,65 @@ public class Game extends JFrame implements GameComponent {
 
 	private int thiefX, thiefY;
 	private int policeX, policeY;
-
+	private JLabel timeLabel;
+	private Thread timeThread;
+	private int timeStr;
+	private boolean threadFlag = true;
+	
 	public Game() {
 		setTitle("경찰과 도둑");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		init();
-
+		initTimeUI();
+		setTimeThread();
+		
 		map.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 					if (map1[thiefX][thiefY].getLeft() == 0) {
-						System.out.println("왼쪽");
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
 
 						panelList.get(thiefX * 9 + thiefY).repaint();
 
 						thiefY -= 1;
 						panelList.get(thiefX * 9 + thiefY).add(thief);
+						movePoliceUI();
 					}
 				} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 					if (map1[thiefX][thiefY].getRight() == 0) {
-						System.out.println("오른쪽");
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
 
 						panelList.get(thiefX * 9 + thiefY).repaint();
 
 						thiefY += 1;
 						panelList.get(thiefX * 9 + thiefY).add(thief);
+						movePoliceUI();
 					}
 				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
 					if (map1[thiefX][thiefY].getUp() == 0) {
-						System.out.println("위");
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
 
 						panelList.get(thiefX * 9 + thiefY).repaint();
 
 						thiefX -= 1;
 						panelList.get(thiefX * 9 + thiefY).add(thief);
+						movePoliceUI();
 					}
 				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 					if (map1[thiefX][thiefY].getDown() == 0) {
-						System.out.println("아래");
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
 
 						panelList.get(thiefX * 9 + thiefY).repaint();
 
 						thiefX += 1;
 						panelList.get(thiefX * 9 + thiefY).add(thief);
+						movePoliceUI();
 					}
+				}else if(e.getKeyCode() == KeyEvent.VK_S) {
+					movePoliceUI();
 				}
-				movePoliceUI();
 				getThief();
 				arriveDetination();
 			}
@@ -101,37 +111,31 @@ public class Game extends JFrame implements GameComponent {
 		// 못가는 벽을 얻기 위한 객체 리스트
 		map1 = map.getLevel1();
 
-		thief.setColor(new Color(255, 0, 0));
-		police.setColor(new Color(0, 0, 255));
+		thief.setColor(new Color(255, 0, 0)); // 도둑 색 정의
+		police.setColor(new Color(0, 0, 255)); // 경찰 색 정의
 
-		// 도둑 초기 위치
-		thiefX = 1;
-		thiefY = 2;
-
-		// 경찰 초기 위치
-		policeX = 0;
-		policeY = 1;
-
-//		// 도둑 초기 위치
-//		thiefX = 0;
-//		thiefY = 1;
-//
-//		// 경찰 초기 위치
-//		policeX = 4;
-//		policeY = 3;
-
-		// 도둑, 경찰 UI 추가
-		System.out.println(panelList.get(thiefX * 9 + thiefY).getClass());
-		panelList.get(thiefX * 9 + thiefY).add(thief);
-		panelList.get(policeX * 9 + policeY).add(police);
-
+		// 출구 라벨 초기화
+		setArriveLabel();
+		initPosition(false);
 	}
 
+	// 출구 라벨 초기화
+	public void setArriveLabel() {
+		JLabel arrive = new JLabel("출구"); 
+		arrive.setFont(new Font("Serif",Font.BOLD,20));
+		arrive.setBounds(15, 15, 50,50);
+		panelList.get(0).setLayout(null);
+		panelList.get(0).add(arrive);
+	}
 	@Override
 	public void arriveDetination() {
 		if (thiefX == 0 && thiefY == 0) {
-			JOptionPane.showMessageDialog(null, "탈출~");
-			initPosition();
+			threadFlag = false; // 시간 스레드 스탑
+			int result = JOptionPane.showConfirmDialog(null, "탈출!!\n" + timeStr + "초","메시지", JOptionPane.DEFAULT_OPTION);
+			
+			if(result == JOptionPane.OK_OPTION) {
+				initPosition(true);
+			}
 		}
 	}
 
@@ -139,20 +143,30 @@ public class Game extends JFrame implements GameComponent {
 	@Override
 	public void getThief() {
 		if ((thiefX == policeX) && (thiefY == policeY)) {
-			JOptionPane.showMessageDialog(null, "잡았다!!도둑!!");
-			initPosition();
+			threadFlag = false; // 시간 스레드 스탑
+			int result = JOptionPane.showConfirmDialog(null, "잡았다!!도둑!!\n" + timeStr + "초","메시지", JOptionPane.DEFAULT_OPTION);
+			
+			if(result == JOptionPane.OK_OPTION) {
+				initPosition(true);
+			}
 		}
 	}
 
 	// 경찰, 도둑 위치 초기화
 	@Override
-	public void initPosition() {
+	public void initPosition(boolean init) {
 		// 도둑, 경찰 UI 추가
-		panelList.get(thiefX * 9 + thiefY).remove(thief);
-		panelList.get(thiefX * 9 + thiefY).repaint();
-		panelList.get(policeX * 9 + policeY).remove(police);
-		panelList.get(policeX * 9 + policeY).repaint();
-
+		if (init) { // 초기 시작엔 필요없는 부분이므로 boolean으로 구분
+			panelList.get(thiefX * 9 + thiefY).remove(thief);
+			panelList.get(thiefX * 9 + thiefY).repaint();
+			panelList.get(policeX * 9 + policeY).remove(police);
+			panelList.get(policeX * 9 + policeY).repaint();
+			
+			// 시간 스레드 초기화 및 재시작
+			threadFlag = true;
+			timeStr = 0;
+			setTimeThread();
+		}
 		// 도둑 초기 위치
 		thiefX = 1;
 		thiefY = 2;
@@ -170,14 +184,14 @@ public class Game extends JFrame implements GameComponent {
 	public void movePoliceUI() {
 		panelList.get(policeX * 9 + policeY).remove(police);
 		panelList.get(policeX * 9 + policeY).repaint();
-		movePolice();
-		movePolice();
+		movePoliceRule();
+		movePoliceRule();
 		panelList.get(policeX * 9 + policeY).add(police);
 	}
 
 	// 경찰 X,Y값 조정.
 	@Override
-	public void movePolice() {
+	public void movePoliceRule() {
 		int dis = distance();
 		int dis2;
 		int temp;
@@ -224,11 +238,37 @@ public class Game extends JFrame implements GameComponent {
 
 	@Override
 	public int distance() {
-		// TODO Auto-generated method stub
 		return Math.abs(thiefX - policeX) + Math.abs(thiefY - policeY);
 	}
-
-	public static void main(String[] args) {
-		new Game();
+	
+	
+	@Override
+	public void initTimeUI() {
+		timeLabel = new JLabel();
+		timeStr = 0;
+	
+		panelList.get(9).add(timeLabel);
+		panelList.get(9).setLayout(null);
+		timeLabel.setText(timeStr+"");
+		timeLabel.setFont(new Font("Serif",Font.BOLD,20));
+		timeLabel.setBounds(28, 15, 50,50);
+	}
+	
+	@Override
+	public void setTimeThread() {
+		timeThread = new Thread(() ->{
+			while(threadFlag) {
+				timeLabel.setText(timeStr + "");
+				
+				try {
+					Thread.sleep(1000);
+					timeStr++;
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		timeThread.start();
 	}
 }
