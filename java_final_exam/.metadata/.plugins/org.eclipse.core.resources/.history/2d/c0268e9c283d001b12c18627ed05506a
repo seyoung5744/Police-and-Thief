@@ -1,8 +1,5 @@
 package final_exam;
 
-/*
- *  ¸ÊÀÇ °¢ Ä­ º® À¯¹« Á¤ÀÇ
- */
 public class Room {
 	private int left, right, up, down;
 

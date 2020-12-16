@@ -3,9 +3,7 @@ package final_exam;
 import java.awt.*;
 import javax.swing.*;
 
-/*
- *   도둑, 경찰을 나타낼 원 그림을 그릴 객체.
- */
+// 도둑, 경찰을 나타낼 원 그림을 그릴 객체.
 public class Human extends JPanel {
 	private Color color;
 	

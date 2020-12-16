@@ -41,7 +41,7 @@ public class Game extends JFrame implements GameComponent {
 		map.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_LEFT) { // µµµÏ ¿ÞÂÊ
+				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 					if (map1[thiefX][thiefY].getLeft() == 0) {
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
 
@@ -51,7 +51,7 @@ public class Game extends JFrame implements GameComponent {
 						panelList.get(thiefX * 9 + thiefY).add(thief);
 						movePoliceUI();
 					}
-				} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) { // µµµÏ ¿À¸¥ÂÊ
+				} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 					if (map1[thiefX][thiefY].getRight() == 0) {
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
 
@@ -61,7 +61,7 @@ public class Game extends JFrame implements GameComponent {
 						panelList.get(thiefX * 9 + thiefY).add(thief);
 						movePoliceUI();
 					}
-				} else if (e.getKeyCode() == KeyEvent.VK_UP) { // µµµÏ À§ÂÊ
+				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
 					if (map1[thiefX][thiefY].getUp() == 0) {
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
 
@@ -71,7 +71,7 @@ public class Game extends JFrame implements GameComponent {
 						panelList.get(thiefX * 9 + thiefY).add(thief);
 						movePoliceUI();
 					}
-				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) { // µµµÏ ¾Æ·¡ÂÊ
+				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 					if (map1[thiefX][thiefY].getDown() == 0) {
 						panelList.get(thiefX * 9 + thiefY).remove(thief);
 
@@ -81,7 +81,7 @@ public class Game extends JFrame implements GameComponent {
 						panelList.get(thiefX * 9 + thiefY).add(thief);
 						movePoliceUI();
 					}
-				}else if(e.getKeyCode() == KeyEvent.VK_S) { // SÅ° ´­·¶À» ½Ã °æÂû¸¸ ÀÌµ¿
+				}else if(e.getKeyCode() == KeyEvent.VK_S) {
 					movePoliceUI();
 				}
 				getThief();

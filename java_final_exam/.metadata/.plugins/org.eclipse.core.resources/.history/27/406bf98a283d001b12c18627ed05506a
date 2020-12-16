@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.*;
-/*
- *  바둑판 모양 맵 정의
- */
+
 public class Map extends JPanel {
 	private List<JPanel> panelList;
 	private JPanel lab;
@@ -34,7 +32,6 @@ public class Map extends JPanel {
 		this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 밖 margin추가
 	}
 	
-	// room 리스트 get
 	public List<JPanel> getPanelList() {
 		return panelList;
 	}
