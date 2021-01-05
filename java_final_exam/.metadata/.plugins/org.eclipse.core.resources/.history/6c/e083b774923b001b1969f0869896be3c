@@ -1,7 +1,0 @@
-package final_exam;
-
-public class ShootingGameMain {
-	public static void main(String[] args) {
-		new ShootingImage();
-	}
-}

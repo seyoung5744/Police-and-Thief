@@ -1,7 +1,0 @@
-package final_exam;
-
-public class StringMain {
-	public static void main(String[] args) {
-		new WalkingLabel();
-	}
-}
